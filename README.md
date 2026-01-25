@@ -13,7 +13,7 @@
 
 ## 📋 系统要求
 
-- Python 3.6+（推荐 3.8+）
+- Python 3.8+
 - macOS / Linux / Windows
 
 ## 🚀 快速开始
