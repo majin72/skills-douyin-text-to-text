@@ -24,6 +24,7 @@ description: 解析抖音分享链接，下载视频，并使用FunASR将视频�
 
 - **Python 版本**: Python 3.6 或更高版本（推荐 3.8+）
 - **操作系统**: 支持 macOS、Linux、Windows
+- **FFmpeg**: 必需的系统工具，用于视频处理
 
 ### 虚拟环境（推荐）
 
@@ -69,6 +70,47 @@ python scripts/parse_douyin_video.py "https://v.douyin.com/xxxxx"
 ### 必需依赖
 
 以下依赖是运行脚本的基础要求：
+
+#### FFmpeg（必需）
+
+**FFmpeg 是系统级工具，需要单独安装**，不能通过 pip 安装。用于视频处理和音频提取。
+
+**macOS:**
+```bash
+# 使用 Homebrew（推荐）
+brew install ffmpeg
+
+# 如果没有 Homebrew，先安装 Homebrew：
+# /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+**Linux (Ubuntu/Debian):**
+```bash
+sudo apt update
+sudo apt install ffmpeg
+```
+
+**Linux (CentOS/RHEL):**
+```bash
+sudo yum install ffmpeg
+# 或者使用 dnf（较新版本）
+sudo dnf install ffmpeg
+```
+
+**Windows:**
+1. 访问 [FFmpeg 官网](https://ffmpeg.org/download.html)
+2. 下载 Windows 版本（推荐使用 [ffmpeg-builds](https://www.gyan.dev/ffmpeg/builds/)）
+3. 解压到某个目录（如 `C:\ffmpeg`）
+4. 将 `bin` 目录添加到系统 PATH 环境变量中
+5. 打开新的命令行窗口，运行 `ffmpeg -version` 验证安装
+
+**验证安装:**
+```bash
+ffmpeg -version
+```
+如果显示版本信息，说明安装成功。
+
+#### Python 依赖
 
 **如果使用虚拟环境**（推荐）：
 - 虚拟环境会自动安装 `requests` 和 `urllib3`
@@ -407,12 +449,22 @@ pip install funasr>=1.0.0
 
 ### 常见问题
 
-1. **ImportError: No module named 'requests'**
+1. **FFmpeg 未安装或找不到**
+   - **错误信息**：`ffmpeg: command not found` 或 `'ffmpeg' 不是内部或外部命令`
+   - **macOS 解决**：运行 `brew install ffmpeg`（需要先安装 Homebrew）
+   - **Linux 解决**：运行 `sudo apt install ffmpeg`（Ubuntu/Debian）或 `sudo yum install ffmpeg`（CentOS/RHEL）
+   - **Windows 解决**：
+     1. 下载 FFmpeg 并解压到某个目录（如 `C:\ffmpeg`）
+     2. 将 `bin` 目录添加到系统 PATH 环境变量
+     3. 打开新的命令行窗口验证：`ffmpeg -version`
+   - **验证安装**：运行 `ffmpeg -version`，如果显示版本信息则安装成功
+
+2. **ImportError: No module named 'requests'**
    - **推荐解决**：使用启动脚本 `run.py`/`run.sh`/`run.bat`，会自动创建虚拟环境并安装依赖
    - **手动解决**：运行 `python scripts/setup_venv.py` 创建虚拟环境
    - **直接解决**：运行 `pip install requests urllib3`（不推荐，可能污染系统环境）
 
-2. **ImportError: No module named 'funasr'**
+3. **ImportError: No module named 'funasr'**
    - **推荐解决**：运行 `python scripts/setup_venv.py`，选择安装 FunASR
    - **手动解决**：激活虚拟环境后运行 `pip install funasr`
    - **直接解决**：运行 `pip install funasr`（仅在使用转文字功能时需要）
