@@ -78,14 +78,14 @@ def parse_video_id_from_path(url_path):
         parsed = urlparse('http://example.com' + url_path)
     
     # 判断网页精选页面的视频
-    # https://www.douyin.com/jingxuan?modal_id=7555093909760789812
+    # https://www.douyin.com/jingxuan?modal_id=xxxx
     if parsed.query:
         query_params = parse_qs(parsed.query)
         if 'modal_id' in query_params and query_params['modal_id']:
             return query_params['modal_id'][0]
     
     # 判断其他页面的视频
-    # https://www.iesdouyin.com/share/video/7424432820954598707/?region=CN&mid=7424432976273869622&u_code=0
+    # https://www.iesdouyin.com/share/video/xxxx
     path = parsed.path.strip('/')
     if not path:
         return None
