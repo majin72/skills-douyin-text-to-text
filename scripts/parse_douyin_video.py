@@ -445,9 +445,27 @@ def main():
     
     args = parser.parse_args()
     
-    # 如果没有指定输出目录，使用当前工作目录下的 downloads
+    # 如果没有指定输出目录，智能判断下载位置
     if args.output_dir is None:
-        args.output_dir = str(Path.cwd() / 'downloads')
+        current_cwd = Path.cwd().resolve()
+        script_dir = Path(__file__).parent.resolve()
+        skill_dir = script_dir.parent.resolve()  # skill根目录
+        
+        # 检测当前工作目录是否是skill目录（通过检查是否存在SKILL.md）
+        # 大模型执行时会cd到skill目录，所以需要检测
+        is_skill_dir = (current_cwd / "SKILL.md").exists() or \
+                      (current_cwd == skill_dir) or \
+                      (current_cwd == script_dir)
+        
+        if is_skill_dir:
+            # 如果是在skill目录执行，使用用户主目录下的固定位置
+            home_dir = Path.home()
+            # 使用 Downloads/douyin-video-text 作为默认下载位置
+            args.output_dir = str(home_dir / "Downloads" / "douyin-video-text")
+            print(f"💡 检测到在skill目录执行，文件将保存到: {args.output_dir}")
+        else:
+            # 如果不在skill目录，使用当前工作目录（用户正常调用）
+            args.output_dir = str(current_cwd / 'downloads')
     
     session = create_session()
     

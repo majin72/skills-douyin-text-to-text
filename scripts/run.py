@@ -96,15 +96,16 @@ def main():
         print("⚠️  使用系统Python运行（可能缺少依赖）")
         venv_python = sys.executable
     
-    # 获取主脚本路径
-    script_dir = Path(__file__).parent
+    # 获取主脚本路径（使用绝对路径）
+    script_dir = Path(__file__).parent.resolve()
     main_script = script_dir / "parse_douyin_video.py"
     
     if not main_script.exists():
         print(f"❌ 找不到主脚本: {main_script}")
         return 1
     
-    # 运行主脚本
+    # 运行主脚本（使用绝对路径）
+    # parse_douyin_video.py 会自己检测是否在skill目录执行，并选择合适的下载位置
     os.execv(str(venv_python), [str(venv_python), str(main_script)] + sys.argv[1:])
 
 
