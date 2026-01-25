@@ -437,13 +437,17 @@ def download_video(video_url, output_path, session):
 def main():
     parser = argparse.ArgumentParser(description='解析抖音分享链接，下载视频，并转成文字')
     parser.add_argument('url', type=str, help='抖音分享链接')
-    parser.add_argument('--output-dir', type=str, default='./downloads', help='输出目录，默认为 ./downloads')
+    parser.add_argument('--output-dir', type=str, default=None, help='输出目录，默认为当前工作目录下的 downloads/')
     parser.add_argument('--transcribe', action='store_true', help='是否转文字（需要安装FunASR）')
     parser.add_argument('--model', type=str, default='paraformer-zh', help='ASR模型，默认为 paraformer-zh')
     parser.add_argument('--vad-model', type=str, default='fsmn-vad', help='VAD模型，默认为 fsmn-vad')
     parser.add_argument('--punc-model', type=str, default='ct-punc', help='标点恢复模型，默认为 ct-punc')
     
     args = parser.parse_args()
+    
+    # 如果没有指定输出目录，使用当前工作目录下的 downloads
+    if args.output_dir is None:
+        args.output_dir = str(Path.cwd() / 'downloads')
     
     session = create_session()
     
